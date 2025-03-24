@@ -13,7 +13,9 @@
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <div class="title">
-                        <h2>List of Paiements for invoice n <%= payments.get(0).getInvoiceId()%></h2>
+                        <h2>List of Payments for invoice n°
+                            <%= (payments != null && !payments.isEmpty()) ? payments.get(0).getInvoiceId() : "is actually null" %>
+                        </h2>
                     </div>
                 </div>
             </div>
@@ -39,11 +41,27 @@
                                 <tr>
                                     <td><p><%= payment.getAmount() %> €</p></td>
                                     <td><p><%= payment.getPaymentDate() %></p></td>
-                                    <td>
 
-                                        <a href="<%= request.getContextPath() %>/payments/edit/<%= payment.getId() %>">edit</a>
-                                        <a href="<%= request.getContextPath() %>/payments/delete/<%= payment.getId() %>">delete</a>
+                                    <td>
+                                        <div style="display: flex; gap: 5px;">
+                                            <form action="<%= request.getContextPath() %>/payments/edit/<%= payment.getId() %>" method="get">
+                                                <button type="submit" class="main-btn primary-btn square-btn btn-hover btn btn-warning"
+                                                        style="padding: 5px 10px; font-size: 12px; width: auto; height: 30px;">
+                                                    Modifier
+                                                </button>
+                                            </form>
+
+                                            <form action="<%= request.getContextPath() %>/payments/delete" method="post">
+                                                <input type="hidden" name="id" value="<%= payment.getId() %>">
+                                                <button type="submit" class="main-btn primary-btn square-btn btn-hover"
+                                                        style="padding: 5px 10px; font-size: 12px; width: auto; height: 30px;"
+                                                        onclick="return confirm('Voulez-vous vraiment supprimer ce paiement ?')">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
+
                                 </tr>
                                 <% } %>
                                 </tbody>

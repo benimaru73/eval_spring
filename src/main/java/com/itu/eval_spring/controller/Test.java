@@ -12,6 +12,6 @@ public class Test {
 
     @GetMapping()
     public String showCreateForm(Model model) {
-        return "pages/paymentsClients";
+        return "pages/login";
     }
 }

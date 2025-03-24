@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,4 +39,22 @@ public class DashboardService {
 
         return new double[]{sumPaid, sumDue};
     }
+
+    public Map<String, Integer> getInvoicesByStatus() {
+        String url = API_URL + "invoices/count-by-status";
+
+        List<Map<String, Object>> response = restTemplate.getForObject(url, List.class);
+        Map<String, Integer> invoiceStatusMap = new HashMap<>();
+
+        if (response != null) {
+            for (Map<String, Object> item : response) {
+                String status = item.get("status").toString();
+                int total = Integer.parseInt(item.get("total").toString());
+                invoiceStatusMap.put(status, total);
+            }
+        }
+
+        return invoiceStatusMap;
+    }
+
 }

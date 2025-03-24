@@ -5,14 +5,13 @@ import com.itu.eval_spring.dto.Payment.Payment;
 import com.itu.eval_spring.dto.Payment.PaymentByInvoice;
 import com.itu.eval_spring.dto.dashboard.PaymentClientDTO;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PaymentService {
@@ -40,9 +39,49 @@ public class PaymentService {
         restTemplate.put(url, payment);
     }
 
-    public void deletePayment(int id) {
-        String url = API_URL + id;
-        restTemplate.delete(url);
+    public void updatePayment(String externalId, double montant) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = API_URL + "update";
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("external_id", externalId); // Correction de la clé
+        requestBody.put("amount", montant);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
+
+        restTemplate.exchange(url, HttpMethod.PUT, request, String.class);
     }
+
+//    public void deletePayment(int id) {
+//        String url = API_URL + id;
+//        Map<String, String> body = new HashMap<>();
+//        body.put("_method", "DELETE");
+//
+//        HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
+//        restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+//
+//        restTemplate.exchange(url, HttpMethod.DELETE, request, String.class);
+//    }
+
+    public void delete(String externalId) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = API_URL + "delete";
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("external_id", externalId);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
+
+        restTemplate.exchange(url, HttpMethod.PUT, request, String.class);
+    }
+
 
 }

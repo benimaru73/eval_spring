@@ -21,13 +21,10 @@ public class PaymentController {
     @GetMapping("/{invoiceId}")
     public String getClientPaymentsByInvoice(@PathVariable Integer invoiceId, Model model) {
         List<Payment> response = paymentService.getPaymentByInvoice(invoiceId);
-        for (Payment payment : response) {
-            System.out.println("hello"+payment.getInvoiceId());
-        }
         if (response != null && !response.isEmpty()) {
             model.addAttribute("payments", response);
         } else {
-            model.addAttribute("payments", List.of()); // Liste vide si aucune donnée
+            model.addAttribute("payments", List.of());
         }
 
         return "pages/payment/all";
@@ -52,29 +49,30 @@ public class PaymentController {
         Payment payment = paymentService.getPaymentById(id);
         System.out.println("hello"+payment.getInvoiceId());
         model.addAttribute("payment", payment);
-        return "pages/payment/form"; // Page de mise à jour
+        return "pages/payment/form";
     }
 
     // Mise à jour du paiement
-    @PostMapping("/edit/{id}")
-    public String updatePayment(@PathVariable("id") int id, @RequestParam("amount") double amount,
-                                @RequestParam("description") String description) {
+    @PostMapping("/edit")
+    public String updatePayment(@RequestParam("id") int id, @RequestParam("amount") double amount){
         Payment payment = paymentService.getPaymentById(id);
+        String external_id = payment.getExternalId();
         int invoiceId = payment.getInvoiceId();
         if (payment != null) {
-            payment.setAmount((double)amount);
-            payment.setDescription(description);
-            paymentService.updatePayment(payment);
+            paymentService.updatePayment(external_id,amount);
         }
         return "redirect:/payments/"+invoiceId;
     }
 
     // Suppression du paiement
-    @GetMapping("/delete/{id}")
-    public String deletePayment(@PathVariable("id") int id) {
+    @PostMapping("/delete")
+    public String deletePayment(@RequestParam("id") int id){
         Payment payment = paymentService.getPaymentById(id);
+        String external_id = payment.getExternalId();
         int invoiceId = payment.getInvoiceId();
-        paymentService.deletePayment(id);
+        if (payment != null) {
+            paymentService.delete(external_id);
+        }
         return "redirect:/payments/"+invoiceId;
     }
 }

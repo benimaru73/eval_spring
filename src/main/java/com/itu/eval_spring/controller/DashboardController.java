@@ -1,19 +1,14 @@
 package com.itu.eval_spring.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itu.eval_spring.dto.ClientDTO;
-import com.itu.eval_spring.dto.ClientPaymentsDTO;
 import com.itu.eval_spring.dto.dashboard.PaymentClientDTO;
-import com.itu.eval_spring.service.ClientService;
 import com.itu.eval_spring.service.DashboardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -28,6 +23,9 @@ public class DashboardController {
     @GetMapping()
     public String showCreateForm(Model model) {
         List<PaymentClientDTO> paymentClientDTO = dashboardService.getPaymentClientDTO();
+        List<Integer> clientid = paymentClientDTO.stream()
+                .map(PaymentClientDTO::getId)
+                .collect(Collectors.toList());
 
         List<String> companyNames = paymentClientDTO.stream()
                 .map(PaymentClientDTO::getCompanyName)
@@ -39,9 +37,14 @@ public class DashboardController {
 
         double[] payment = dashboardService.getPaidAndUnpaid();
 
+        // Récupération des factures par statut
+        Map<String, Integer> invoiceStatusMap = dashboardService.getInvoicesByStatus();
+
         model.addAttribute("companyNames", companyNames);
         model.addAttribute("totalPaidValues", totalPaidValues);
         model.addAttribute("paidAndUnpaid", payment);
+        model.addAttribute("invoiceStatusMap", invoiceStatusMap);
+        model.addAttribute("clientid", clientid);
 
         return "pages/dashboard/index";
     }

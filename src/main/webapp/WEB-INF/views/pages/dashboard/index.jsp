@@ -9,6 +9,7 @@
     String companyNamesJson = objectMapper.writeValueAsString(request.getAttribute("companyNames"));
     String totalPaidValuesJson = objectMapper.writeValueAsString(request.getAttribute("totalPaidValues"));
     String totalPaidValueJson = objectMapper.writeValueAsString(request.getAttribute("paidAndUnpaid"));
+    String invoiceStatusMapJson = objectMapper.writeValueAsString(request.getAttribute("invoiceStatusMap"));
 %>
 
 <section class="section">
@@ -18,7 +19,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Pie Chart</h5>
+                    <h5 class="card-title">Project paid and unpaid</h5>
 
                     <!-- Pie Chart -->
                     <div id="pieChart"></div>
@@ -47,7 +48,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Bar Chart</h5>
+                    <h5 class="card-title">Payments by clients</h5>
 
                     <!-- Bar Chart -->
                     <div id="barChartContainer">
@@ -89,11 +90,62 @@
 
         <style>
             #barChartContainer {
-                /* height: 400px; /* Hauteur fixe du conteneur */
+                 height: 350px;
                 overflow-y: auto; /* Active le scroll si nécessaire */
             }
         </style>
     </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Nombre de factures par statut</h5>
+
+                <!-- Bar Chart -->
+                <canvas id="barChart2" style="max-height: 400px;"></canvas>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const ctx = document.querySelector('#barChart2');
+
+                        // Récupérer les données converties en JSON
+                        const invoiceStatusMap = <%= invoiceStatusMapJson %>;
+
+                        // Transformer la map en deux tableaux (labels & data)
+                        const labels = Object.keys(invoiceStatusMap);
+                        const data = Object.values(invoiceStatusMap);
+
+                        // Générer des couleurs aléatoires
+                        const backgroundColors = labels.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.2)`);
+                        const borderColors = labels.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`);
+
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Nombre de factures',
+                                    data: data,
+                                    backgroundColor: backgroundColors,
+                                    borderColor: borderColors,
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    });
+                </script>
+                <!-- End Bar CHart -->
+            </div>
+        </div>
+    </div>
+
 </section>
 <script src="vendor/apexcharts/apexcharts.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

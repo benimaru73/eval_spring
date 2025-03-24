@@ -1,27 +1,22 @@
+<%@ page import="com.itu.eval_spring.dto.Reduction.Reduction" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.itu.eval_spring.dto.Payment.Payment" %>
 
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />
 
+
 <!-- ========== tab components start ========== -->
+<%   Reduction reduction = (Reduction) request.getAttribute("reduction");%>
 <section class="tab-components">
     <div class="container-fluid">
+
         <!-- ========== title-wrapper start ========== -->
         <div class="title-wrapper pt-30">
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <div class="title">
-                        <h2>"Modifier un paiement"</h2>
+                        <h2><%= reduction.getTaux() == 0 ? "Créer reduction" : "Modifier reduction" %></h2>
                     </div>
-                </div>
-                <!-- end col -->
-                <div class="col-md-6">
-                    <div class="breadcrumb-wrapper">
-                        <a href="/payments">Retour à la liste</a>
-                    </div>
-                </div>
-                <!-- end col -->
-            </div>
+                </div>            </div>
             <!-- end row -->
         </div>
         <!-- ========== title-wrapper end ========== -->
@@ -33,30 +28,41 @@
                     <!-- input style start -->
                     <div class="card-style mb-30">
                         <form action="<%
-              Payment payment = (Payment) request.getAttribute("payment");
-              out.print("/payments/edit" );
-            %>" method="post">
+
+    if (reduction.getTaux() == 0) {
+        out.print("/reductions/create");
+    } else {
+        out.print("/reductions/edit/"+reduction.getId() );
+    }
+%>" method="post">
 
                             <div class="input-style-1">
-                                <label for="amount">Montant :</label>
-                                <input type="number" id="amount" name="amount" value="<%= request.getAttribute("payment") != null ? ((Payment) request.getAttribute("payment")).getAmount() : "" %>" >
-                            </div>
-                            <input type="hidden" id="id" name="id" value="<%= ((Payment) request.getAttribute("payment")).getId() %>" >
+                                <label for="taux">taux :</label>
+                                <input type="text" id="taux" name="taux" value="<%= request.getAttribute("reduction") != null ? ((Reduction) request.getAttribute("reduction")).getTaux() : "" %>" required>
 
+                            </div>
 
 
 
                             <button type="submit" class="main-btn primary-btn square-btn btn-hover">Enregistrer</button>
                         </form>
 
-
                     </div>
                     <!-- end card -->
+                    <!-- ======= input style end ======= -->
+
                 </div>
+
             </div>
+            <!-- end row -->
         </div>
         <!-- ========== form-elements-wrapper end ========== -->
+
     </div>
 </section>
+
+
+
+
 
 <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
