@@ -1,9 +1,7 @@
 package com.itu.eval_spring.service;
 
-import com.itu.eval_spring.dto.ClientPaymentsDTO;
-import com.itu.eval_spring.dto.Payment.Payment;
-import com.itu.eval_spring.dto.Payment.PaymentByInvoice;
-import com.itu.eval_spring.dto.dashboard.PaymentClientDTO;
+import com.itu.eval_spring.dto.payment.Payment;
+import com.itu.eval_spring.dto.payment.PaymentByInvoice;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;

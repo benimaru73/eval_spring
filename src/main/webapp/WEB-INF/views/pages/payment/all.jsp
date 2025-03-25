@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.itu.eval_spring.dto.Payment.PaymentByInvoice" %>
-<%@ page import="com.itu.eval_spring.dto.Payment.Payment" %>
+<%@ page import="com.itu.eval_spring.dto.payment.PaymentByInvoice" %>
+<%@ page import="com.itu.eval_spring.dto.payment.Payment" %>
 
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />
 <%

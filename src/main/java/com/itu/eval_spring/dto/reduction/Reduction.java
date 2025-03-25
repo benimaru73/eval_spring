@@ -1,4 +1,4 @@
-package com.itu.eval_spring.dto.Reduction;
+package com.itu.eval_spring.dto.reduction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

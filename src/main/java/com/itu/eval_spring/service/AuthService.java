@@ -1,5 +1,6 @@
 package com.itu.eval_spring.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -14,7 +15,7 @@ public class AuthService {
     private static final String BASE_URL = "http://localhost:8000/api";
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public ResponseEntity<String> login(String email, String password) {
+    public ResponseEntity<JsonNode> login(String email, String password) {
         String url = BASE_URL + "/login";
 
         HttpHeaders headers = new HttpHeaders();
@@ -27,11 +28,13 @@ public class AuthService {
         HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
 
         try {
-            return restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+            ResponseEntity<JsonNode> response = restTemplate.exchange(url, HttpMethod.POST, request, JsonNode.class);
+            return response;
+
         } catch (HttpClientErrorException.Unauthorized e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe incorrect");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Retourne un status 401 avec corps vide
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Une erreur interne est survenue.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Retourne un status 500 avec corps vide
         }
     }
 

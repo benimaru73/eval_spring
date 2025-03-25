@@ -1,4 +1,4 @@
-<%@ page import="com.itu.eval_spring.dto.Reduction.Reduction" %>
+<%@ page import="com.itu.eval_spring.dto.reduction.Reduction" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />

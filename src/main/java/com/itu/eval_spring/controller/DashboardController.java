@@ -2,6 +2,7 @@ package com.itu.eval_spring.controller;
 
 import com.itu.eval_spring.dto.dashboard.PaymentClientDTO;
 import com.itu.eval_spring.service.DashboardService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,10 @@ public class DashboardController {
     }
 
     @GetMapping()
-    public String showCreateForm(Model model) {
+    public String showCreateForm(Model model, HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/index";
+        }
         List<PaymentClientDTO> paymentClientDTO = dashboardService.getPaymentClientDTO();
         List<Integer> clientid = paymentClientDTO.stream()
                 .map(PaymentClientDTO::getId)

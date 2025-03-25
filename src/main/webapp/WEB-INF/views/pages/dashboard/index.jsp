@@ -10,6 +10,7 @@
     String totalPaidValuesJson = objectMapper.writeValueAsString(request.getAttribute("totalPaidValues"));
     String totalPaidValueJson = objectMapper.writeValueAsString(request.getAttribute("paidAndUnpaid"));
     String invoiceStatusMapJson = objectMapper.writeValueAsString(request.getAttribute("invoiceStatusMap"));
+    String clientidJson = objectMapper.writeValueAsString(request.getAttribute("clientid"));
 %>
 
 <section class="section">
@@ -27,19 +28,27 @@
                     <script>
                         const totalPayment = JSON.parse('<%= totalPaidValueJson %>');
                         document.addEventListener("DOMContentLoaded", () => {
-                            new ApexCharts(document.querySelector("#pieChart"), {
+                            const chart = new ApexCharts(document.querySelector("#pieChart"), {
                                 series: totalPayment,
                                 chart: {
                                     height: 350,
                                     type: 'pie',
                                     toolbar: {
                                         show: true
+                                    },
+                                    events: {
+                                        click: function (event, chartContext, config) {
+                                            // Lorsque le graphique est cliqué, rediriger vers l'URL spécifiée
+                                            window.location.href = 'http://localhost:8080/payments';
+                                        }
                                     }
                                 },
                                 labels: ['Payed', 'Amount due']
-                            }).render();
+                            });
+                            chart.render();
                         });
                     </script>
+
                     <!-- End Pie Chart -->
 
                 </div>
@@ -57,16 +66,41 @@
 
                     <script>
                         document.addEventListener("DOMContentLoaded", () => {
-                            const companyNames = JSON.parse('<%= companyNamesJson %>');
-                            const totalPaidValues = JSON.parse('<%= totalPaidValuesJson %>');
+                            const companyNames = JSON.parse('<%=companyNamesJson %>');
+                            const totalPaidValues = JSON.parse('<%=totalPaidValuesJson %>');
+                            const clientIds = JSON.parse('<%=clientidJson %>');
 
-                            new ApexCharts(document.querySelector("#barChart"), {
+                            const clientMap = {};
+                            companyNames.forEach((name, index) => {
+                                clientMap[name] = clientIds[index];
+                            });
+
+                            console.log("Mapping des clients:", clientMap);
+                            console.log("clientIds:", clientIds);
+
+                            const chart = new ApexCharts(document.querySelector("#barChart"), {
                                 series: [{
+                                    name: "Total Paid",
                                     data: totalPaidValues
                                 }],
                                 chart: {
                                     type: 'bar',
-                                    height: Math.min(50 * companyNames.length, 700), // Ajuste la hauteur selon le nombre d'éléments
+                                    height: Math.min(50 * companyNames.length, 700),
+                                    events: {
+                                        dataPointSelection: function(event, chartContext, config) {
+                                            const companyName = config.w.config.xaxis.categories[config.dataPointIndex]; // Récupère le nom de l'entreprise cliquée
+                                            const clientId = clientMap[companyName]; // Trouve l'ID client associé
+
+                                            console.log("Entreprise cliquée:", companyName);
+                                            console.log("clientId pour l'entreprise:", clientId);
+
+                                            if (clientId) {
+                                                window.location.href = `http://localhost:8080/clients/payments/`+clientId;
+                                            } else {
+                                                console.error("Client ID non trouvé pour l'entreprise:", companyName);
+                                            }
+                                        }
+                                    }
                                 },
                                 plotOptions: {
                                     bar: {
@@ -78,15 +112,23 @@
                                     enabled: false
                                 },
                                 xaxis: {
-                                    categories: companyNames
+                                    categories: companyNames, // Affiche les noms des entreprises normalement
+                                    labels: {
+                                        style: {
+                                            cursor: 'pointer', // Ajoute un style de curseur en forme de main
+                                        }
+                                    }
                                 }
-                            }).render();
-                        });
-                    </script>
+                            });
 
+                            chart.render();
+                        });
+
+                    </script>
                 </div>
             </div>
         </div>
+
 
         <style>
             #barChartContainer {
@@ -136,15 +178,25 @@
                                     y: {
                                         beginAtZero: true
                                     }
+                                },
+                                // Détecter le clic sur une barre
+                                onClick: function (event, elements) {
+                                    if (elements.length > 0) {
+                                        // Rediriger vers l'URL spécifiée
+                                        window.location.href = 'http://localhost:8080/invoices';
+                                    }
                                 }
                             }
                         });
                     });
                 </script>
+
                 <!-- End Bar CHart -->
             </div>
         </div>
     </div>
+<hr>
+
 
 </section>
 <script src="vendor/apexcharts/apexcharts.min.js"></script>

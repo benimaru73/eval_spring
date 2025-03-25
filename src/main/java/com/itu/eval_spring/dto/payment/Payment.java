@@ -1,4 +1,4 @@
-package com.itu.eval_spring.dto.Payment;
+package com.itu.eval_spring.dto.payment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

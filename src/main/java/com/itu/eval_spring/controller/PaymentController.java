@@ -1,7 +1,7 @@
 package com.itu.eval_spring.controller;
 
-import com.itu.eval_spring.dto.Payment.Payment;
-import com.itu.eval_spring.dto.Payment.PaymentByInvoice;
+import com.itu.eval_spring.dto.payment.Payment;
+import com.itu.eval_spring.dto.payment.PaymentByInvoice;
 import com.itu.eval_spring.service.PaymentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,10 +1,6 @@
 package com.itu.eval_spring.service;
 
-import com.itu.eval_spring.dto.ClientPaymentsDTO;
-import com.itu.eval_spring.dto.Payment.Payment;
-import com.itu.eval_spring.dto.Payment.PaymentByInvoice;
-import com.itu.eval_spring.dto.Reduction.Reduction;
-import org.springframework.core.ParameterizedTypeReference;
+import com.itu.eval_spring.dto.reduction.Reduction;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service

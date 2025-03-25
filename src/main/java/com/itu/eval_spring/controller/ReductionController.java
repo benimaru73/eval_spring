@@ -1,6 +1,6 @@
 package com.itu.eval_spring.controller;
 
-import com.itu.eval_spring.dto.Reduction.Reduction;
+import com.itu.eval_spring.dto.reduction.Reduction;
 import com.itu.eval_spring.service.ReductionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
